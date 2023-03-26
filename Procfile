@@ -1,0 +1,1 @@
+web: java -jar build/libs/verbuslt-api.jar --server.port=$PORT
