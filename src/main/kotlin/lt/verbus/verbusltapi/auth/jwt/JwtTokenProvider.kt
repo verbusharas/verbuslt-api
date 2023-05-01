@@ -30,7 +30,7 @@ class JwtTokenProvider {
         val now = Date()
         val expiryDate = Date(now.time + expirationInMs)
         return JWT.create()
-            .withSubject(java.lang.String.valueOf(principal.getUserId()))
+            .withSubject(principal.getUserId().toString())
             .withIssuedAt(now)
             .withExpiresAt(expiryDate)
             .withClaim(CLAIMS_AUTHORITIES, principal.authorities.map { obj: GrantedAuthority -> obj.authority })
@@ -40,7 +40,7 @@ class JwtTokenProvider {
             .sign(Algorithm.HMAC512(jwtSecret))
     }
 
-    fun getUserPrincipalFromToken(token: String?): UserPrincipal? {
+    fun getUserPrincipalFromToken(token: String?): UserPrincipal {
         val claims: DecodedJWT = JWT.require(Algorithm.HMAC512(jwtSecret))
             .build()
             .verify(token)
