@@ -13,6 +13,7 @@ class CustomUserDetailsService : UserDetailsService {
         email = "some@email.com",
         name = "Some Name",
         surname = "Some Surname",
-        roles = setOf(SimpleGrantedAuthority("SOME_ROLE"))
+        roles = setOf(SimpleGrantedAuthority("SOME_ROLE")),
+        password = "\$2a\$10\$9a.rqAJv0UNCzg/ZaPOt5u2SV6E6YT6g.DUDpg7FRQyLMOaKpNv3a"
     )
 }

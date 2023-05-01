@@ -13,7 +13,7 @@ class UserPrincipalAuthentication: AbstractAuthenticationToken {
         this.userPrincipal = principal
     }
 
-    override fun getCredentials(): String? = null;
+    override fun getCredentials(): String? = null
 
     override fun getPrincipal(): UserPrincipal? = userPrincipal
 }

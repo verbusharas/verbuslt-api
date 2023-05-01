@@ -1,10 +1,10 @@
 package lt.verbus.verbusltapi.auth.jwt
 
-import lt.verbus.verbusltapi.auth.model.UserPrincipal
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
 import com.auth0.jwt.exceptions.InvalidClaimException
 import com.auth0.jwt.interfaces.DecodedJWT
+import lt.verbus.verbusltapi.auth.model.UserPrincipal
 import lt.verbus.verbusltapi.exception.UnauthorizedException
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
@@ -15,18 +15,19 @@ import java.util.*
 @Component
 class JwtTokenProvider {
     private val jwtSecret = "some-secret"
-    private val jwtExpirationInMinutes = 5
+    private val jwtExpirationInMinutes = 200
+    private val maxExpirationInMs = 6000 * 60 * 60 // 6 hrs
 
     private val CLAIMS_EMAIL = "e"
     private val CLAIMS_NAME = "n"
     private val CLAIMS_SURNAME = "s"
     private val CLAIMS_AUTHORITIES = "a"
 
-    fun generateDefaultToken(userPrincipal: UserPrincipal): String? {
-        return generateToken(userPrincipal, jwtExpirationInMinutes)
+    fun generateDefaultToken(userPrincipal: UserPrincipal): String {
+        return generateToken(userPrincipal, jwtExpirationInMinutes * 1000 * 60)
     }
 
-    fun generateToken(principal: UserPrincipal, expirationInMs: Int): String? {
+    fun generateToken(principal: UserPrincipal, expirationInMs: Int): String {
         val now = Date()
         val expiryDate = Date(now.time + expirationInMs)
         return JWT.create()
@@ -46,8 +47,9 @@ class JwtTokenProvider {
             .verify(token)
         val iat: Date? = claims.getClaim("iat").asDate()
         val exp: Date? = claims.getClaim("exp").asDate()
-        if (iat == null || exp == null || exp.time - iat.time > jwtExpirationInMinutes) throw InvalidClaimException(
-            "Bad dates $iat $exp $jwtExpirationInMinutes"
+
+        if (iat == null || exp == null || exp.time - iat.time > maxExpirationInMs) throw InvalidClaimException(
+            "Bad dates $iat $exp $maxExpirationInMs"
         )
 
         return UserPrincipal.of(
@@ -63,7 +65,7 @@ class JwtTokenProvider {
         )
     }
 
-    fun getTokenExpiresAtDate(jwtToken: String?): Instant? {
+    fun getTokenExpiresAtDate(jwtToken: String?): Instant {
         val claims: DecodedJWT = JWT.require(Algorithm.HMAC512(jwtSecret))
             .build()
             .verify(jwtToken)

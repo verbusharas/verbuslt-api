@@ -1,6 +1,5 @@
 package lt.verbus.verbusltapi.auth.jwt
 
-import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Component
 import org.springframework.util.StringUtils
@@ -20,7 +19,7 @@ class JwtAuthenticationFilter(val tokenProvider: JwtTokenProvider): OncePerReque
             val token = extractJwtFromRequest(request)
             if (token != null) {
                 val principal = tokenProvider.getUserPrincipalFromToken(token)
-                val authentication: Authentication = UserPrincipalAuthentication(principal)
+                val authentication = UserPrincipalAuthentication(principal)
                 SecurityContextHolder.getContext().authentication = authentication
                 print("JWT Token Provided - setting authentication in security context")
             } else {

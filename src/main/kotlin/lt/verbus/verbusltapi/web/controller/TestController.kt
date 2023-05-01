@@ -13,6 +13,9 @@ class TestController {
     @GetMapping("/hello")
     fun greet() = "Hi"
 
+    @GetMapping("/public/hello")
+    fun greetPublic() = "Hi public"
+
     @GetMapping("/get-increased/{number}")
     fun increase(@PathVariable number: Int) = number + 1;
 }

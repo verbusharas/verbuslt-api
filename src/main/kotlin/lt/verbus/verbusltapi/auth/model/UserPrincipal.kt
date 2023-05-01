@@ -56,6 +56,23 @@ class UserPrincipal(
         fun of(
             userId: Long,
             email: String,
+            password: String,
+            name: String,
+            surname: String,
+            roles: Set<GrantedAuthority>
+        ) = UserPrincipal(
+            userId = userId,
+            authorities = roles,
+            email = email,
+            password = password,
+            enabled = true,
+            name = name,
+            lastName = surname,
+        )
+
+        fun of(
+            userId: Long,
+            email: String,
             name: String,
             surname: String,
             roles: Set<GrantedAuthority>
