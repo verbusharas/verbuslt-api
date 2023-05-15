@@ -1,10 +1,10 @@
 package lt.verbus.verbusltapi.auth.model
 
 import com.fasterxml.jackson.annotation.JsonIgnore
+import lt.verbus.verbusltapi.user.model.User
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
-import java.util.stream.Stream
 
 class UserPrincipal(
     private var userId: Long,
@@ -12,30 +12,15 @@ class UserPrincipal(
     @JsonIgnore
     private var password: String? = null,
     private var email: String,
-    private var name: String,
+    private var firstName: String,
     private var lastName: String,
     private var enabled: Boolean,
     private var authorities: Collection<GrantedAuthority>,
 ): UserDetails {
 
-    fun of(
-        userId: Long,
-        email: String,
-        name: String,
-        surname: String,
-        roles: Set<GrantedAuthority>
-    ) = UserPrincipal(
-        userId = userId,
-        authorities = roles,
-        email = email,
-        enabled = true,
-        name = name,
-        lastName = surname,
-    )
-
     fun getUserId() = userId
     fun getEmail() = email
-    fun getName() = name
+    fun getFirstName() = firstName
     fun getLastName() = lastName
 
     override fun getAuthorities() = authorities
@@ -66,7 +51,7 @@ class UserPrincipal(
             email = email,
             password = password,
             enabled = true,
-            name = name,
+            firstName = name,
             lastName = surname,
         )
 
@@ -81,8 +66,20 @@ class UserPrincipal(
             authorities = roles,
             email = email,
             enabled = true,
-            name = name,
+            firstName = name,
             lastName = surname,
+        )
+
+        infix fun of(
+            user: User,
+        ) = UserPrincipal(
+            userId = user.id,
+            authorities = setOf(SimpleGrantedAuthority(user.role.toString())),
+            email = user.email,
+            password = user.password,
+            enabled = true,
+            firstName = user.firstName,
+            lastName = user.lastName,
         )
     }
 }

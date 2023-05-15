@@ -37,7 +37,7 @@ class JwtTokenProvider {
             .withClaim(CLAIMS_AUTHORITIES, principal.authorities.map { obj: GrantedAuthority -> obj.authority })
             .withClaim(CLAIMS_EMAIL, principal.getEmail())
             .withClaim(CLAIMS_SURNAME, principal.getLastName())
-            .withClaim(CLAIMS_NAME, principal.getName())
+            .withClaim(CLAIMS_NAME, principal.getFirstName())
             .sign(Algorithm.HMAC512(jwtSecret))
     }
 
