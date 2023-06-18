@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:mysql://srv922.hstgr.io:3306/default-database?useSSL=false&serverTimezone=UTC
-    username: ${PROD_SQL_USERNAME}
-    password: ${PROD_SQL_PASSWORD}
+    url: jdbc:mysql://localhost:3306/default-database?useSSL=false&serverTimezone=UTC
+    username: user
+    password: password
   jpa:
     hibernate:
       ddl-auto: validate
